@@ -86,10 +86,10 @@ transform: scale(0.9);
 
 /* Main Weather Display */
 .Weather {
-display: flex;
-flex-direction: column;
-align-items: center;
-margin-bottom: 50px;
+display:flex;
+flex-direction:column;
+align-items:center;
+margin-bottom:20px;
 }
 
 .Weather img {
@@ -120,11 +120,40 @@ line-height: 1;
 margin-bottom: 10px;
 }
 
+
+/* Location */
+
 .Location {
-font-size: 36px;
-font-weight: 400;
+font-size: 38px;
+font-weight: 500;
+margin-top: 5px;
+text-align: center;
 }
 
+/* Date & Time */
+
+.date-time{
+display:flex;
+flex-direction:column;
+align-items:center;
+
+margin-top:12px;
+margin-bottom:40px;
+
+color:rgba(255,255,255,0.85);
+}
+
+.date-time p:first-child{
+font-size:16px;
+font-weight:500;
+letter-spacing:0.5px;
+}
+
+.date-time p:last-child{
+font-size:28px;
+font-weight:600;
+margin-top:5px;
+}
 /* Bottom Data Grid */
 .Weather-Data {
 width: 100%;
@@ -173,8 +202,9 @@ opacity: 0.7;
   height:100%;
 
   object-fit:fill;
-
+  
   z-index:-2;
+  transition: opacity 0.5s ease;
 }
 body::before{
   content:"";

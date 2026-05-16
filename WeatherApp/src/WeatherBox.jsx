@@ -1,17 +1,18 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from "react";
 
-import clear_icon from "./Assets/clear.png"
-import cloud_icon from "./Assets/cloud.png"
-import drizzle_icon from "./Assets/drizzle.png"
-import humidity_icon from "./Assets/humidity.png"
-import rain_icon from "./Assets/rain.png"
-import snow_icon from "./Assets/snow.png"
-import wind_icon from "./Assets/wind.png"
-import Clear_bg from "./Assets/bg-videos/Clear.mp4"
-import Cloud_bg from "./Assets/bg-videos/Cloudly.mp4"
-import Drizzle_bg from "./Assets/bg-videos/Drizzle.mp4"
-import Rain_bg from "./Assets/bg-videos/Rain.mp4"
-import Snow_bg from "./Assets/bg-videos/Snow.mp4"
+import clear_icon from "./Assets/clear.png";
+import cloud_icon from "./Assets/cloud.png";
+import drizzle_icon from "./Assets/drizzle.png";
+import humidity_icon from "./Assets/humidity.png";
+import rain_icon from "./Assets/rain.png";
+import snow_icon from "./Assets/snow.png";
+import wind_icon from "./Assets/wind.png";
+
+import Clear_bg from "./Assets/bg-videos/Clear.mp4";
+import Cloud_bg from "./Assets/bg-videos/Cloudly.mp4";
+import Drizzle_bg from "./Assets/bg-videos/Drizzle.mp4";
+import Rain_bg from "./Assets/bg-videos/Rain.mp4";
+import Snow_bg from "./Assets/bg-videos/Snow.mp4";
 
 function WeatherBox() {
 
@@ -36,11 +37,30 @@ function WeatherBox() {
     "13n": snow_icon,
   };
 
+  // Current Date & Time
+
+  const today = new Date();
+
+  const currentDate = today.toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  const currentTime = today.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  // Weather Search Function
+
   const search = async (city) => {
-         if (!city || typeof city !== "string" || city.trim() === "") {
-         alert("Enter City Name");
-         return;
-  }
+
+    if (!city || typeof city !== "string" || city.trim() === "") {
+      alert("Enter City Name");
+      return;
+    }
+
     try {
 
       const url =
@@ -51,6 +71,11 @@ function WeatherBox() {
       const data = await response.json();
 
       console.log(data);
+
+      if (data.cod !== 200) {
+        alert("City not found");
+        return;
+      }
 
       const Icon =
         allicons[data.weather[0].icon] || clear_icon;
@@ -67,7 +92,7 @@ function WeatherBox() {
     }
 
     catch (error) {
-      console.log("Error in Fetching the Weather Data!!")
+      console.log("Error Fetching Weather Data", error);
     }
   };
 
@@ -75,56 +100,67 @@ function WeatherBox() {
     search("Karimnagar");
   }, []);
 
+  // Background Video
+
   let backgroundVideo = "";
 
   if (weatherData) {
 
-  if (weatherData.condition === "Clear") {
-    backgroundVideo =Clear_bg
+    if (weatherData.condition === "Clear") {
+      backgroundVideo = Clear_bg;
+    }
+
+    else if (weatherData.condition === "Clouds") {
+      backgroundVideo = Cloud_bg;
+    }
+
+    else if (weatherData.condition === "Rain") {
+      backgroundVideo = Rain_bg;
+    }
+
+    else if (weatherData.condition === "Snow") {
+      backgroundVideo = Snow_bg;
+    }
+
+    else if (weatherData.condition === "Drizzle") {
+      backgroundVideo = Drizzle_bg;
+    }
+
+    else {
+      backgroundVideo = Clear_bg;
+    }
   }
 
-  else if (weatherData.condition === "Clouds") {
-    backgroundVideo =Cloud_bg;
-  }
-
-  else if (weatherData.condition === "Rain") {
-    backgroundVideo =Rain_bg;
-  }
-
-  else if (weatherData.condition === "Snow") {
-    backgroundVideo =Snow_bg;
-  }
-  else if(weatherData.condition === "Drizzle"){
-    backgroundVideo = Drizzle_bg;
-  }
-  else{
-    backgroundVideo = Clear_bg;
-  }
-}
   if (!weatherData) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
-  
-  
-    return (
+
+  return (
     <>
-    <video
-      autoPlay
-      loop
-      muted
-      playsInline
-      className="video-bg"
-      src={backgroundVideo}
-    />
-      <div className='WeatherBox'>
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="video-bg"
+        src={backgroundVideo}
+      />
+
+      <div className="WeatherBox">
 
         <nav className="Search">
 
           <input
             ref={inputRef}
             className="Search-bar"
-            type='text'
-            placeholder='Search'
+            type="text"
+            placeholder="Search"
+
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                search(inputRef.current.value);
+              }
+            }}
           />
 
           <button
@@ -137,8 +173,6 @@ function WeatherBox() {
           </button>
 
         </nav>
-
-        {weatherData? <>
 
         <div className="Weather">
 
@@ -155,6 +189,11 @@ function WeatherBox() {
             {weatherData.location}
           </p>
 
+        </div>
+
+        <div className="date-time">
+          <p>{currentDate}</p>
+          <p>{currentTime}</p>
         </div>
 
         <div className="Weather-Data">
@@ -186,9 +225,9 @@ function WeatherBox() {
           </div>
 
         </div>
-        </>:<></>}
+
       </div>
-      </>
+    </>
   );
 }
 
