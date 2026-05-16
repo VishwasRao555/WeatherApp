@@ -37,7 +37,10 @@ function WeatherBox() {
   };
 
   const search = async (city) => {
-
+         if (!city || typeof city !== "string" || city.trim() === "") {
+         alert("Enter City Name");
+         return;
+  }
     try {
 
       const url =
@@ -64,7 +67,7 @@ function WeatherBox() {
     }
 
     catch (error) {
-      console.log(error);
+      console.log("Error in Fetching the Weather Data!!")
     }
   };
 
@@ -135,6 +138,8 @@ function WeatherBox() {
 
         </nav>
 
+        {weatherData? <>
+
         <div className="Weather">
 
           <img
@@ -181,7 +186,7 @@ function WeatherBox() {
           </div>
 
         </div>
-
+        </>:<></>}
       </div>
       </>
   );
