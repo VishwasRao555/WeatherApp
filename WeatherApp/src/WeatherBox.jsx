@@ -17,6 +17,10 @@ import Snow_bg from "./Assets/bg-videos/Snow.mp4";
 function WeatherBox() {
 
   const [weatherData, setWeatherData] = useState(null);
+  const [cityDateTime, setCityDateTime] = useState({
+    currentDate: "",
+    currentTime: "",
+  });
 
   const inputRef = useRef();
 
@@ -37,20 +41,23 @@ function WeatherBox() {
     "13n": snow_icon,
   };
 
-  // Current Date & Time
+  const formatCityDateTime = (timezoneOffsetSeconds) => {
+    const cityNow = new Date(Date.now() + timezoneOffsetSeconds * 1000);
 
-  const today = new Date();
-
-  const currentDate = today.toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-
-  const currentTime = today.toLocaleTimeString("en-IN", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+    return {
+      currentDate: cityNow.toLocaleDateString("en-IN", {
+        timeZone: "UTC",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
+      currentTime: cityNow.toLocaleTimeString("en-IN", {
+        timeZone: "UTC",
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+  };
 
   // Weather Search Function
 
@@ -87,6 +94,7 @@ function WeatherBox() {
         location: data.name,
         icon: Icon,
         condition: data.weather[0].main,
+        timezoneOffset: data.timezone,
       });
 
     }
@@ -99,6 +107,22 @@ function WeatherBox() {
   useEffect(() => {
     search("Karimnagar");
   }, []);
+
+  useEffect(() => {
+    if (weatherData?.timezoneOffset === undefined || weatherData?.timezoneOffset === null) {
+      return;
+    }
+
+    const updateClock = () => {
+      setCityDateTime(formatCityDateTime(weatherData.timezoneOffset));
+    };
+
+    updateClock();
+
+    const intervalId = setInterval(updateClock, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [weatherData?.timezoneOffset]);
 
   // Background Video
 
@@ -192,8 +216,8 @@ function WeatherBox() {
         </div>
 
         <div className="date-time">
-          <p>{currentDate}</p>
-          <p>{currentTime}</p>
+          <p>{cityDateTime.currentDate}</p>
+          <p>{cityDateTime.currentTime}</p>
         </div>
 
         <div className="Weather-Data">
