@@ -278,7 +278,7 @@ function WeatherBox() {
             ref={inputRef}
             className="Search-bar"
             type="text"
-            placeholder="Search"
+            placeholder="Enter City Name"
             onKeyDown={(e) => {
               if (e.key === "Enter" && !isLoading) {
                 search(inputRef.current.value);
