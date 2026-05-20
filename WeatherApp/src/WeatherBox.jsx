@@ -14,6 +14,8 @@ import Drizzle_bg from "./Assets/bg-videos/Drizzle.mp4";
 import Rain_bg from "./Assets/bg-videos/Rain.mp4";
 import Snow_bg from "./Assets/bg-videos/Snow.mp4";
 
+
+
 function WeatherBox() {
 
   const [weatherData, setWeatherData] = useState(null);
@@ -219,6 +221,8 @@ function WeatherBox() {
           <p>{cityDateTime.currentDate}</p>
           <p>{cityDateTime.currentTime}</p>
         </div>
+
+
 
         <div className="Weather-Data">
 
