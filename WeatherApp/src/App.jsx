@@ -1,13 +1,8 @@
-import { useState } from 'react'
 import './index.css'
-import  WeatherBox from './WeatherBox'
+import WeatherBox from './WeatherBox'
 
 function App() {
-  return (
-    
-      <WeatherBox/>
-  
-  )
+  return <WeatherBox />
 }
 
 export default App
